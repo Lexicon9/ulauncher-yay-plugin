@@ -1,8 +1,8 @@
 {
     "required_api_version": "^2.0.0",
-    "name": "Arch Package Search",
+    "name": "Arch Package Search v2",
     "description": "Search for packages in Arch Linux",
-    "developer_name": "Adam Tillou",
+    "developer_name": "Adam Tillou (modified by Lexicon9)",
     "icon": "icon.png",
     "options": {
         "query_debounce": 1
@@ -11,8 +11,26 @@
         {
             "id": "keyword",
             "type": "keyword",
-            "name": "Arch Package Search",
+            "name": "Arch Package Search ",
             "default_value": "pkg"
+        },
+        {
+            "id": "aur_helper",
+            "type": "input",
+            "name": "AUR Helper",
+            "description": "Determines which AUR helper will be used to query packages and what command will be copied to the clipboard. It must use pacman style -S and -Ss flags",
+            "default_value": "yay"
+        },
+        {
+            "id": "always_use_helper",
+            "type": "input",
+            "name": "Always Use AUR Helper",
+            "description": "Always copy AUR Helper commands even when packages are from the normal repositores. (Recommended No.)",
+            "default_value": "No",
+            "options": [
+                {"value": "Yes", "text": "Yes"},
+                {"value": "No", "text": "No"}
+            ]
         }
     ]
 }
