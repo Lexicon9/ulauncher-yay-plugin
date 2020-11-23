@@ -16,12 +16,37 @@ class Extension(Extension):
 
     def __init__(self):
         super(Extension, self).__init__()
+        self.preferences = {}
+        
         self.subscribe(KeywordQueryEvent, KeywordQueryEventListener())
+        # events risen when the preferences change (on boot and on change)
+        self.subscribe(PreferencesEvent, PreferencesEventListener())
+        self.subscribe(PreferencesUpdateEvent, PreferencesEventListener())
 
+        
+class PreferencesEventListener(EventListener):
+    """
+    On boot and on preferences changes, update the preferences in the extension instance.
+    """
+    def on_event(self, event, extension):
+        if hasattr(event, 'preferences'):
+            extension.preferences = event.preferences
+        else:
+            extension.preferences[event.id] = event.new_value
 
+            
 class KeywordQueryEventListener(EventListener):
     def on_event(self, event, extension):
         query = event.get_argument() or str()
+        aur_helper = extension.preferences.get('aur_helper')
+        if aur_helper is not None:
+            try:
+                aur_helper = str(aur_helper)
+            except ValueError:
+                pass
+
+        always_use_helper = extension.preferences.get('always_use_helper') == 'Yes'
+        
         if len(query.strip()) == 0:
             return RenderResultListAction([
                 ExtensionResultItem(icon='icon.png',
@@ -29,7 +54,7 @@ class KeywordQueryEventListener(EventListener):
                                     on_enter=HideWindowAction())
             ])
         else:
-            data = subprocess.Popen(["yay", "-Ss", str(query)], stdout = subprocess.PIPE)
+            data = subprocess.Popen([aur_helper, "-Ss", str(query)], stdout = subprocess.PIPE)
             cmd = str(data.communicate())
 
             packages = [] # List of packages
@@ -63,7 +88,7 @@ class KeywordQueryEventListener(EventListener):
 
             items = []
             for q in packages:
-                if q[2] == "aur":
+                if always_use_helper == true or q[2] == "aur":
                     items.append(ExtensionResultItem(icon='icon.png',
                                                      name=q[0] + "  (" + q[2] + ")",
                                                      description=q[1],
