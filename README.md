@@ -7,4 +7,4 @@ This is a fork of a probably perfectly fine extension by Adam Tillou, but the re
 You must have an AUR helper that uses pacman style -S and -Ss flags installed to enable searching for packages from the AUR. 
 ## Installation
 Open ULauncher, and click the settings cog to open the settings menu. Navigate to the extensions tab, click add extension, and then paste the github link (below) into the field.  
-https://github.com/Lexicon9/ulauncher-aur-plugin
+https://github.com/holozene/ulauncher-aur-plugin
